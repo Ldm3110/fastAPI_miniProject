@@ -2,6 +2,7 @@ from datetime import datetime
 from fastapi import FastAPI, status, HTTPException, Depends
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+from typing import List
 
 from database import SessionLocal
 from utilities import translator, id_creator, send_herokuapp
@@ -70,3 +71,11 @@ def create_new_comment(target_id: str, comment: NewComment, db: Session = Depend
     db.commit()
 
     return new_comment
+
+
+@app.get("/target/{target_id}/comments",
+         response_model=List[Comment],
+         status_code=status.HTTP_200_OK)
+def get_all_comment_of_a_target(target_id: str, db: Session = Depends(get_db)):
+    comments = db.query(models.Comment).filter(models.Comment.targetId == target_id).all()
+    return comments

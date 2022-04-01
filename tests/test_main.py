@@ -70,3 +70,10 @@ class TestCreation:
 
         assert response.status_code == 400
         assert response.json() == {"detail": "comment is empty or not in en-fr"}
+
+
+class TestGet:
+    def test_get_comments_for_a_target(self):
+        target = "Test-1234"
+        response_get = client.get(f"/target/{target}/comments")
+        assert response_get.status_code == 200
